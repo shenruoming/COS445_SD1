@@ -12,8 +12,9 @@ holist
 random
 synergist
 usnews
-rs3270
-rs3270
-period
-period
 periodt
+periodt
+okperiod
+okperiod
+period
+period
