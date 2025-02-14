@@ -70,9 +70,6 @@ public class Student_periodt implements Student {
     if (percentile >= 0.70){
       numReachSchools = 7;
     }
-    else if (percentile >= 0.5) {
-      numReachSchools = 5;
-    }
     else {
       numReachSchools = 3;
     }
