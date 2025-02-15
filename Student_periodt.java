@@ -36,9 +36,25 @@ public class Student_periodt implements Student {
     School[] preferences = new School[schools.size()];
     double relativeRank = aptitude/S;
     double maxQuality = -1;
+    double percentile = aptitude/S;
     HashMap<School, Integer> map = new HashMap<>();
 
     School[] qualities = new School[schools.size()];
+
+    double qualityScaling = 1;
+    double synergyScaling = 1;
+    if (percentile <= 0.25) {
+      qualityScaling = 0.25;
+      synergyScaling = 1.75;
+    }
+    else if (percentile <= 0.5) {
+      qualityScaling = 0.5;
+      synergyScaling = 1.5;
+    }
+    else if (percentile <= 0.75) {
+      qualityScaling = 0.75;
+      synergyScaling = 1.25;
+    }
 
     for (int i = 0; i != synergies.size(); ++i) {
         double quality = schools.get(i);
@@ -49,7 +65,7 @@ public class Student_periodt implements Student {
         qualities[i] = uni;
     }
 
-    double targetRank = relativeRank * maxQuality;
+    double targetRank = relativeRank*maxQuality;
     // index of target uni in qualities[]
     int targetUni = -1;
     double rankDiff = Integer.MAX_VALUE;
@@ -65,10 +81,16 @@ public class Student_periodt implements Student {
       }
     }
     
-    double percentile = aptitude/S;
+
     int numReachSchools = 0;
-    if (percentile >= 0.70){
-      numReachSchools = 7;
+    if (percentile >= 0.7){
+      numReachSchools = 8;
+    }
+    else if (percentile >= 0.50) {
+      numReachSchools = 6;
+    }
+    else if (percentile >= 0.25) {
+      numReachSchools = 4;
     }
     else {
       numReachSchools = 3;
