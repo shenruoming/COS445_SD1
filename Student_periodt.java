@@ -8,15 +8,17 @@ import java.util.List;
 
 public class Student_periodt implements Student {
   private class School implements Comparable<School> {
-    public School(int i, double qualitySynergy, double quality) {
+    public School(int i, double qualitySynergy, double quality, double synergy) {
       index = i;
       this.qualitySynergy = qualitySynergy;
       this.quality = quality;
+      this.synergy = synergy;
     }
 
     private int index;
     private double qualitySynergy;
     private double quality;
+    private double synergy;
 
     public int compareTo(School n) { // smaller pairs are higher quality
       int ret = Double.compare(n.qualitySynergy, qualitySynergy);
@@ -40,32 +42,34 @@ public class Student_periodt implements Student {
     HashMap<School, Integer> map = new HashMap<>();
 
     School[] qualities = new School[schools.size()];
+    School[] synergiesArray = new School[schools.size()];
 
-    double qualityScaling = 1;
-    double synergyScaling = 1;
-    if (percentile <= 0.25) {
-      qualityScaling = 0.25;
-      synergyScaling = 1.75;
-    }
-    else if (percentile <= 0.5) {
-      qualityScaling = 0.5;
-      synergyScaling = 1.5;
-    }
-    else if (percentile <= 0.75) {
-      qualityScaling = 0.75;
-      synergyScaling = 1.25;
-    }
+    // double qualityScaling = 1;
+    // double synergyScaling = 1;
+    // if (percentile <= 0.25) {
+    //   qualityScaling = 0.25;
+    //   synergyScaling = 1.75;
+    // }
+    // else if (percentile <= 0.5) {
+    //   qualityScaling = 0.5;
+    //   synergyScaling = 1.5;
+    // }
+    // else if (percentile <= 0.75) {
+    //   qualityScaling = 0.75;
+    //   synergyScaling = 1.25;
+    // }
 
     for (int i = 0; i != synergies.size(); ++i) {
         double quality = schools.get(i);
         maxQuality = Math.max(quality, maxQuality);
         double synergy = synergies.get(i);
-        School uni = new School(i, quality + synergy, quality);
+        School uni = new School(i, quality + synergy, quality,synergy);
         preferences[i] = uni;
         qualities[i] = uni;
+        synergiesArray[i] = uni;
     }
 
-    double targetRank = relativeRank*maxQuality;
+    double targetRank = relativeRank * maxQuality;
     // index of target uni in qualities[]
     int targetUni = -1;
     double rankDiff = Integer.MAX_VALUE;
@@ -74,6 +78,8 @@ public class Student_periodt implements Student {
     Arrays.sort(preferences);
     // sorting target schools
     Arrays.sort(qualities, (a,b) -> Double.compare(a.quality, b.quality));
+    // sort synergies
+    Arrays.sort(synergiesArray, (a,b) -> Double.compare(b.synergy, a.synergy));
     // find rank of "max quality of target uni"
     for (int i = 0; i != synergies.size(); ++i) {
       if (Math.abs(qualities[i].quality - targetRank) < rankDiff) {
@@ -116,10 +122,16 @@ public class Student_periodt implements Student {
       ret[i] = uni.index;
       map.put(uni, uni.index);
     }
-
-    // if (map.size() < 10) {
-
-    // }
+    int indexSynergy = 0;
+    while (map.size() < 10) {
+      while (indexSynergy < qualities.length && map.containsKey(synergiesArray[indexSynergy])) {
+        indexSynergy++;
+      }
+      if (indexSynergy == qualities.length) break;
+      School uni = synergiesArray[indexSynergy];
+      ret[map.size()] = uni.index;
+      map.put(uni,uni.index);
+    }
 
     return ret;
   }

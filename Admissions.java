@@ -201,7 +201,7 @@ public class Admissions extends Tournament<Student, AdmissionsConfig> {
   public static void main(String[] args) throws java.io.FileNotFoundException {
     assert args.length >= 1 : "Expected filename of strategies as first argument";
     final int numTrials = 500;
-    final AdmissionsConfig config = new AdmissionsConfig(100, 100, 10);
+    final AdmissionsConfig config = new AdmissionsConfig(0, 100, 10);
     final BufferedReader namesFile = new BufferedReader(new FileReader(args[0]));
     final List<String> strategyNames = namesFile.lines().map(s -> String.format("Student_%s", s))
         .collect(Collectors.toList());
